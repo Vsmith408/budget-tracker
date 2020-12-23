@@ -1,3 +1,4 @@
+
 let transactions = [];
 let myChart;
 
@@ -13,6 +14,13 @@ fetch("/api/transaction")
     populateTable();
     populateChart();
   });
+
+
+function saveRecord(data) {
+  const tx2 = db.transaction([storeName], 'readwrite');
+  const objStore = tx2.objectStore(storeName);
+  objStore.add(data)
+}
 
 function populateTotal() {
   // reduce transaction amounts to a single total value
@@ -136,6 +144,7 @@ function sendTransaction(isAdding) {
   })
   .catch(err => {
     // fetch failed, so save in indexed db
+   
     saveRecord(transaction);
 
     // clear form
@@ -143,6 +152,8 @@ function sendTransaction(isAdding) {
     amountEl.value = "";
   });
 }
+
+
 
 document.querySelector("#add-btn").onclick = function() {
   sendTransaction(true);
